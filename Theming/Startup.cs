@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Theming
 {
@@ -21,10 +22,15 @@ namespace Theming
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             // Add framework services.
             services.AddMvc();
 
-
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
