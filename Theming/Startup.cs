@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Theming
 {
@@ -47,6 +51,15 @@ namespace Theming
             }
 
             app.UseStaticFiles();
+
+            var appSettings = app.ApplicationServices.GetRequiredService<IOptions<AppSettings>>();
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                    $@"Views/Themes/{appSettings.Value.Theme}")),
+                RequestPath = string.Empty
+            });
 
             app.UseMvc(routes =>
             {
