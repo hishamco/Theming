@@ -48,6 +48,7 @@ namespace Theming
         {
             foreach (var location in viewLocations)
             {
+                yield return location;
                 yield return location.Insert(7, $"Themes/{theme}/");
             }
         }
